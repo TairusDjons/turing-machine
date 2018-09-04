@@ -73,7 +73,6 @@ namespace Turing
             list.RemoveAt(convertedIndex);
         }
 
-
         void ICollection<char>.Add(char item)
         {
             throw new NotSupportedException();
