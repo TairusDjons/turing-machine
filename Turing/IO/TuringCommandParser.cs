@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Turing.IO
 {
-    public class TuringCommandParser
+    public class TuringCommandParser : ITuringCommandParser
     {
         private const string LeftTypeString = "l";
 

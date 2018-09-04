@@ -6,24 +6,27 @@ using System.Text;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Turing.IO;
 
 namespace Turing.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
-        private string input;
+        private readonly ITuringCommandParser commandParser;
 
-        private string output;
+        private readonly ITuringMachine turingMachine;
 
         private IEnumerable<TuringCommand> turingCommands;
 
-        private TuringMachine turingMachine;
+        private string input;
 
         public string Input
         {
             get => input;
             set => Set(ref input, value);
         }
+
+        private string output;
 
         public string Output
         {
@@ -37,6 +40,12 @@ namespace Turing.ViewModels
         {
             get => executeCommand
                 ?? (executeCommand = new RelayCommand(() => Output = turingMachine.Execute(input, turingCommands)));
+        }
+
+        public MainViewModel(ITuringCommandParser commandParser, ITuringMachine turingMachine)
+        {
+            this.commandParser = commandParser;
+            this.turingMachine = turingMachine;
         }
     }
 }

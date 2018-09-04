@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Turing
 {
-    public sealed class TuringMachine
+    public sealed class TuringMachine : ITuringMachine
     {
         public string Execute(string str, IEnumerable<TuringCommand> turingCommands)
         {

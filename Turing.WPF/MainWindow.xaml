@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Turing.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+		DataContext="{Binding Main, Source={StaticResource Locator}}">
     <StackPanel>
 		<TextBlock>Input:</TextBlock>
-		<TextBox></TextBox>
+		<TextBox Text="{Binding Input}"></TextBox>
 		<TextBlock>Output:</TextBlock>
-		<TextBlock></TextBlock>
-		<Button>Execute</Button>
+		<TextBlock Text="{Binding Output}"></TextBlock>
+		<Button Command="{Binding ExecuteCommand}">Execute</Button>
     </StackPanel>
 </Window>
