@@ -5,6 +5,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
+using Turing.IO;
+using Turing.ViewModels;
 
 namespace Turing.WPF
 {
@@ -13,5 +18,16 @@ namespace Turing.WPF
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<TuringMachine>().As<ITuringMachine>().SingleInstance();
+            builder.RegisterType<TuringCommandParser>().As<ITuringCommandParser>().SingleInstance();
+            builder.RegisterType<MainViewModel>().SingleInstance();
+            var container = builder.Build();
+            var csl = new AutofacServiceLocator(container);
+            ServiceLocator.SetLocatorProvider(() => csl);
+            base.OnStartup(e);
+        }
     }
 }
