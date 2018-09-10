@@ -1,8 +1,4 @@
-﻿using Autofac;
-using Autofac.Extras.CommonServiceLocator;
-using CommonServiceLocator;
-using GalaSoft.MvvmLight.Ioc;
-using Turing.IO;
+﻿using CommonServiceLocator;
 
 namespace Turing.ViewModels
 {

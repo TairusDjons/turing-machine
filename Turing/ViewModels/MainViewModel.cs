@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Turing.IO;
@@ -16,7 +11,7 @@ namespace Turing.ViewModels
 
         private readonly ITuringMachine turingMachine;
 
-        private IEnumerable<TuringCommand> turingCommands;
+        private readonly IEnumerable<TuringCommand> turingCommands;
 
         private string input;
 
@@ -36,11 +31,8 @@ namespace Turing.ViewModels
 
         private RelayCommand executeCommand;
 
-        public RelayCommand ExecuteCommand
-        {
-            get => executeCommand
+        public RelayCommand ExecuteCommand => executeCommand
                 ?? (executeCommand = new RelayCommand(() => Output = turingMachine.Execute(input, turingCommands)));
-        }
 
         public MainViewModel(ITuringCommandParser commandParser, ITuringMachine turingMachine)
         {
