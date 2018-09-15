@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Turing.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="287.5" Width="467"
 		DataContext="{Binding Main, Source={StaticResource Locator}}">
-    <StackPanel>
-		<TextBlock>Input:</TextBlock>
-		<TextBox Text="{Binding Input}"></TextBox>
-		<TextBlock>Output:</TextBlock>
-		<TextBlock Text="{Binding Output}"></TextBlock>
-		<Button Command="{Binding ExecuteCommand}">Execute</Button>
+    <StackPanel Margin="0,28,2,0">
+        <TextBlock Margin="72,0" FontSize="16">Input:</TextBlock>
+        <TextBox Text="{Binding Input}" Height="32" Margin="72,0" FontSize="16" TextAlignment="Center"></TextBox>
+        <TextBlock Margin="72,12,72,0" FontSize="16">Output:</TextBlock>
+        <TextBlock Text="{Binding Output}" Height="32" Margin="72,0" FontSize="16" TextAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
+        <Button Content="Read File" Height="31" Click="Button_Click" Margin="98,10,98,4" FontSize="16"/>
+        <Button Command="{Binding ExecuteCommand}" Content="Execute" Height="33" Margin="98,0" FontSize="16"/>
     </StackPanel>
 </Window>
