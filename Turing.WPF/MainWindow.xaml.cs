@@ -33,11 +33,8 @@ namespace Turing.WPF
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
-            if (dialog.ShowDialog() == true)
-            {
-                var name = dialog.FileName;
-                Messenger.Default.Send(new FilePathMessage(name));
-            }
+            if ((bool)dialog.ShowDialog())
+                Messenger.Default.Send(new FilePathMessage(dialog.FileName));
         }
 
         public MainViewModel GetViewModel
