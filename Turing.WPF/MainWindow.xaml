@@ -7,12 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="287.5" Width="467"
 		DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <Style x:Key="BaseStyle" TargetType="Control">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="32"/>
+        </Style>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="72, 12, 72, 0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="98,4,98,4"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="72,0"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <StackPanel Margin="0,28,2,0">
-        <TextBlock Margin="72,0" FontSize="16">Input:</TextBlock>
-        <TextBox Text="{Binding Input}" Height="32" Margin="72,0" FontSize="16" TextAlignment="Center"></TextBox>
-        <TextBlock Margin="72,12,72,0" FontSize="16">Output:</TextBlock>
-        <TextBlock Text="{Binding Output}" Height="32" Margin="72,0" FontSize="16" TextAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
-        <Button Content="Read File" Height="31" Click="Button_Click" Margin="98,10,98,4" FontSize="16"/>
-        <Button Command="{Binding ExecuteCommand}" Content="Execute" Height="33" Margin="98,0" FontSize="16"/>
+        <TextBlock Style="{StaticResource TextBlockStyle}">Input:</TextBlock>
+        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Input}" ></TextBox>
+        <TextBlock Style="{StaticResource TextBlockStyle}">Output:</TextBlock>
+        <TextBox Style="{StaticResource TextBoxStyle}" IsEnabled="False" Text="{Binding Output}"/>
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding OpenFileDialogCommand}" Content="Read File" />
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding ExecuteCommand}" Content="Execute" />
     </StackPanel>
 </Window>
