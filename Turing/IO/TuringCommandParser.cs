@@ -6,11 +6,13 @@ namespace Turing.IO
 {
     public class TuringCommandParser : ITuringCommandParser
     {
-        private const string LeftTypeString = "l";
+        public const string LeftTypeString = "l";
 
-        private const string RightTypeString = "r";
+        public const string RightTypeString = "r";
 
-        private const string NeutralTypeString = "n";
+        public const string NeutralTypeString = "n";
+
+        public const string EmptySymbol = "null";
 
         public TuringCommand[] ParseFile(string path)
         {
@@ -25,10 +27,16 @@ namespace Turing.IO
                     : words[4] == RightTypeString ? TuringCommandType.Right
                     : words[4] == NeutralTypeString ? TuringCommandType.Neutral
                     : throw new TuringParsingException();
+
+                char? ParseSymbol(string str)
+                {
+                    return str == "null" ? (char?)null : char.Parse(str);
+                }
+
                 try
                 {
                     commands[i] = new TuringCommand
-                        (int.Parse(words[0]), char.Parse(words[1]), int.Parse(words[2]), char.Parse(words[3]), type);
+                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), type);
                 }
                 catch (FormatException exception)
                 {
