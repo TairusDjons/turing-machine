@@ -28,18 +28,17 @@ namespace Turing.WPF
         public MainWindow()
         {
             InitializeComponent();
+            Messenger.Default.Register<OpenFileDialogMessage>(
+                this,
+                msg =>
+                {
+                    var dialog = new OpenFileDialog();
+                    if ((bool)dialog.ShowDialog())
+                        GetViewModel.ReadFileCommand.Execute(dialog.FileName);
+                });
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog();
-            if ((bool)dialog.ShowDialog())
-                Messenger.Default.Send(new FilePathMessage(dialog.FileName));
-        }
-
-        public MainViewModel GetViewModel
-        {
-            get => (MainViewModel)DataContext;
-        }
+        public MainViewModel GetViewModel => (MainViewModel)DataContext;
+        
     }
 }
