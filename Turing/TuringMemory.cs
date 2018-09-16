@@ -25,8 +25,16 @@ namespace Turing
             }
             set
             {
-                var list = GetConvertedIndexAndList(index);
-                list.List.Insert(list.Index, value);
+                var (list, realIndex) = GetRealIndexAndList(index);
+                try
+                {
+                    list[realIndex] = value;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    for (int i = list.Count; i < realIndex; i++) list.Add(null);
+                    list.Insert(realIndex, value);
+                }
             }
         }
 
@@ -35,7 +43,7 @@ namespace Turing
             frontList = new List<char?>(str.Select(c => (char?)c));
         }
 
-        private (List<char?> List, int Index) GetConvertedIndexAndList(int index)
+        private (List<char?> List, int Index) GetRealIndexAndList(int index)
         {
             return index >= 0 ? (frontList, index) : (backList, ~index);
         }
