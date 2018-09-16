@@ -28,7 +28,7 @@
         <TextBlock Style="{StaticResource TextBlockStyle}">Input:</TextBlock>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Input}" ></TextBox>
         <TextBlock Style="{StaticResource TextBlockStyle}">Output:</TextBlock>
-        <TextBox Style="{StaticResource TextBoxStyle}" IsEnabled="False" Text="{Binding Output}"/>
+        <TextBox Style="{StaticResource TextBoxStyle}" IsReadOnly="True" Text="{Binding Output}"/>
         <Button Style="{StaticResource ButtonStyle}" Command="{Binding OpenFileDialogCommand}" Content="Read File" />
         <Button Style="{StaticResource ButtonStyle}" Command="{Binding ExecuteCommand}" Content="Execute" />
     </StackPanel>
