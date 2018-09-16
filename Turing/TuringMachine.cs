@@ -15,13 +15,14 @@ namespace Turing
                     = (command.NextCommand, command.NextSymbol, command.CommandType);
             }
             int commandIndex = 0, memoryIndex = 0;
-            while (dict.TryGetValue((commandIndex, memory[memoryIndex]), out var output))
+            while (memory[memoryIndex].HasValue
+                && dict.TryGetValue((commandIndex, memory[memoryIndex].Value), out var output))
             {
                 commandIndex = output.CommandIndex;
                 memory[memoryIndex] = output.Symbol;
                 memoryIndex += (int)output.CommandType;
             }
-            return new string(memory.ToArray());
+            return new string(memory.Where(c => c.HasValue).Select(c => c.Value).ToArray());
         }
     }
 }

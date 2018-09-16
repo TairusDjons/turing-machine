@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Turing
 {
-    internal class TuringMemory : IList<char>
+    internal class TuringMemory : IList<char?>
     {
-        private readonly List<char> backList = new List<char>();
-        private readonly List<char> frontList;
+        private readonly List<char?> backList = new List<char?>();
+        private readonly List<char?> frontList;
 
-        public char this[int index]
+        public char? this[int index]
         {
-            get => index >= 0 ? frontList[index] : backList[~index];
+            get
+            {
+                try
+                {
+                    return index >= 0 ? frontList[index] : backList[~index];
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    return null;
+                }
+            }
             set
             {
                 var list = GetConvertedIndexAndList(index);
-                list.List[list.Index] = value;
+                list.List.Insert(list.Index, value);
             }
         }
 
@@ -25,10 +36,10 @@ namespace Turing
 
         public TuringMemory(string str)
         {
-            frontList = new List<char>(str);
+            frontList = new List<char?>(str.Select(c => (char?)c));
         }
 
-        private (List<char> List, int Index) GetConvertedIndexAndList(int index)
+        private (List<char?> List, int Index) GetConvertedIndexAndList(int index)
         {
             return index >= 0 ? (frontList, index) : (backList, ~index);
         }
@@ -39,12 +50,12 @@ namespace Turing
             frontList.Clear();
         }
 
-        public bool Contains(char item)
+        public bool Contains(char? item)
         {
             return backList.Contains(item) || frontList.Contains(item);
         }
 
-        public IEnumerator<char> GetEnumerator()
+        public IEnumerator<char?> GetEnumerator()
         {
             foreach (var item in backList)
             {
@@ -56,13 +67,13 @@ namespace Turing
             }
         }
 
-        public int IndexOf(char item)
+        public int IndexOf(char? item)
         {
             var backIndex = backList.IndexOf(item);
             return backIndex != -1 ? backIndex : frontList.IndexOf(item);
         }
 
-        public bool Remove(char item)
+        public bool Remove(char? item)
         {
             return backList.Remove(item) || frontList.Remove(item);
         }
@@ -73,17 +84,17 @@ namespace Turing
             list.RemoveAt(convertedIndex);
         }
 
-        void ICollection<char>.Add(char item)
+        void ICollection<char?>.Add(char? item)
         {
             throw new NotSupportedException();
         }
 
-        void ICollection<char>.CopyTo(char[] array, int arrayIndex)
+        void ICollection<char?>.CopyTo(char?[] array, int arrayIndex)
         {
             throw new NotSupportedException();
         }
 
-        void IList<char>.Insert(int index, char item)
+        void IList<char?>.Insert(int index, char? item)
         {
             throw new NotSupportedException();
         }
