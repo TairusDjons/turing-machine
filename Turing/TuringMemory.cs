@@ -18,7 +18,7 @@ namespace Turing
                 {
                     return index >= 0 ? frontList[index] : backList[~index];
                 }
-                catch (IndexOutOfRangeException)
+                catch (ArgumentOutOfRangeException)
                 {
                     return null;
                 }
@@ -30,7 +30,7 @@ namespace Turing
                 {
                     list[realIndex] = value;
                 }
-                catch (IndexOutOfRangeException)
+                catch (ArgumentOutOfRangeException)
                 {
                     for (int i = list.Count; i < realIndex; i++) list.Add(null);
                     list.Insert(realIndex, value);
