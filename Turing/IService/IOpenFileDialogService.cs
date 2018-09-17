@@ -6,6 +6,6 @@ namespace Turing.IService
 {
     public interface IOpenFileDialogService
     {
-        void Open();
+        string Open();
     }
 }
