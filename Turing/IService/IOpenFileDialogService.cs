@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Turing.Services
+namespace Turing.IService
 {
     public interface IOpenFileDialogService
     {
