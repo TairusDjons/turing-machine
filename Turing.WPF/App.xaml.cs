@@ -21,7 +21,7 @@ namespace Turing.WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<TuringMachine>().As<ITuringMachine>().SingleInstance();
+            builder.RegisterType<TuringMachineFactory>().As<ITuringMachineFactory>().SingleInstance();
             builder.RegisterType<TuringCommandParser>().As<ITuringCommandParser>().SingleInstance();
             builder.RegisterType<MainViewModel>().SingleInstance();
             var container = builder.Build();

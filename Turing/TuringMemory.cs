@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Turing
 {
-    internal class TuringMemory : IEnumerable<char?>, IEnumerable
+    internal sealed class TuringMemory : IEnumerable<char?>, IEnumerable
     {
         private readonly List<char?> backList = new List<char?>();
         private readonly List<char?> frontList;
@@ -43,9 +43,10 @@ namespace Turing
             frontList = new List<char?>(str.Select(c => (char?)c));
         }
 
-        private (List<char?> List, int Index) GetRealIndexAndList(int index)
+        public void Clear()
         {
-            return index >= 0 ? (frontList, index) : (backList, ~index);
+            frontList.Clear();
+            backList.Clear();
         }
 
         public IEnumerator<char?> GetEnumerator()
@@ -58,6 +59,11 @@ namespace Turing
             {
                 yield return item;
             }
+        }
+
+        private (List<char?> List, int Index) GetRealIndexAndList(int index)
+        {
+            return index >= 0 ? (frontList, index) : (backList, ~index);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

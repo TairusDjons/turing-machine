@@ -4,6 +4,18 @@ namespace Turing
 {
     public interface ITuringMachine
     {
-        string Execute(string str, IEnumerable<TuringCommand> turingCommands);
+        bool IsEnd { get; }
+
+        int CommandIndex { get; }
+
+        int MemoryIndex { get; }
+
+        IReadOnlyList<char?> Memory { get; }
+
+        void Reset(string str);
+
+        void Step();
+
+        void Execute();
     }
 }

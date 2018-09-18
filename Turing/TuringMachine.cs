@@ -1,27 +1,53 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Turing
 {
     public sealed class TuringMachine : ITuringMachine
     {
-        public string Execute(string str, IEnumerable<TuringCommand> turingCommands)
+        private TuringMemory memory;
+
+        private readonly Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)> commandTransitions
+            = new Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)>();
+        
+        public bool IsEnd { get; private set; }
+
+        public int CommandIndex { get; private set; }
+
+        public int MemoryIndex { get; private set; }
+
+        public IReadOnlyList<char?> Memory => new ReadOnlyCollection<char?>(memory.ToList());
+
+        public TuringMachine(IEnumerable<TuringCommand> turingCommands, string str = "")
         {
-            var memory = new TuringMemory(str);
-            var dict = new Dictionary<(int CommandIndex, char? Symbol), (int CommandIndex, char? Symbol, TuringCommandType CommandType)>();
+            Reset(str);
             foreach (var command in turingCommands)
             {
-                dict[(command.CurrentCommand, command.CurrentSymbol)]
-                    = (command.NextCommand, command.NextSymbol, command.CommandType);
+                commandTransitions[(command.CurrentState)] = (command.NextState, command.CommandType);
             }
-            int commandIndex = 0, memoryIndex = 0;
-            while (dict.TryGetValue((commandIndex, memory[memoryIndex]), out var output))
+        }
+
+        public void Reset(string str)
+        {
+            memory = new TuringMemory(str);
+            CommandIndex = 0;
+            MemoryIndex = 0;
+        }
+
+        public void Step()
+        {
+            if ((IsEnd = commandTransitions.TryGetValue(new TuringState(CommandIndex, memory[MemoryIndex]), out var output)))
             {
-                commandIndex = output.CommandIndex;
-                memory[memoryIndex] = output.Symbol;
-                memoryIndex += (int)output.CommandType;
+                CommandIndex = output.State.CommandIndex;
+                memory[MemoryIndex] = output.State.Symbol;
+                MemoryIndex += (int)output.CommandType;
             }
-            return new string(memory.Where(c => c.HasValue).Select(c => c.Value).ToArray());
+        }
+
+        public void Execute()
+        {
+            do { Step(); } while (IsEnd);
         }
     }
 }
