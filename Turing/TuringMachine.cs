@@ -33,6 +33,7 @@ namespace Turing
             memory = new TuringMemory(str);
             CommandIndex = 0;
             MemoryIndex = 0;
+            IsEnd = true;
         }
 
         public void Step()
