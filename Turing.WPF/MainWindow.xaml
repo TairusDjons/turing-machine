@@ -5,13 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Turing.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="401.5" Width="440"
 		DataContext="{Binding Main, Source={StaticResource Locator}}">
-    <StackPanel>
-		<TextBlock>Input:</TextBlock>
-		<TextBox Text="{Binding Input}"></TextBox>
-		<TextBlock>Output:</TextBlock>
-		<TextBlock Text="{Binding Output}"></TextBlock>
-		<Button Command="{Binding ExecuteCommand}">Execute</Button>
+    <Window.Resources>
+        <Style x:Key="BaseStyle" TargetType="Control">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="32"/>
+        </Style>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="72, 12, 72, 0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="130,4,130,4"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="72,0"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="0,28,0,0">
+        <TextBlock Style="{StaticResource TextBlockStyle}">Input:</TextBlock>
+        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding Input}" ></TextBox>
+        <TextBlock Style="{StaticResource TextBlockStyle}">Output:</TextBlock>
+        <ScrollViewer Style="{StaticResource BaseStyle}" Margin="72,4,72,4">
+            <ListBox ItemsSource="{Binding TuringMachine.Memory}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </ScrollViewer>
+
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding OpenFileDialogCommand}" Content="Read File" />
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding ExecuteCommand}" Content="Execute" />
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding StepCommand}" Content="Step"></Button>
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding ResetCommand}" Content="Reset"></Button>
     </StackPanel>
 </Window>
