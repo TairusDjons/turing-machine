@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Turing.IService
+﻿namespace Turing.IService
 {
     public interface IOpenFileDialogService
     {
