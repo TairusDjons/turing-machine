@@ -31,7 +31,7 @@ namespace Turing
         public void Reset(string str)
         {
             memory = new TuringMemory(str);
-            CommandIndex = 0;
+            CommandIndex = 1;
             MemoryIndex = 0;
             IsEnd = true;
         }
