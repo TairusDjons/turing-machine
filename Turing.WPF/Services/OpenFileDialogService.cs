@@ -8,6 +8,7 @@ namespace Turing.WPF.Services
         public string Open()
         {
             var dialog = new OpenFileDialog();
+            dialog.DefaultExt = "turing";
             if (dialog.ShowDialog() == true)
             {
                 return dialog.FileName;
