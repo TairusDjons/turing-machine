@@ -22,6 +22,14 @@ namespace Turing.IO
             var commands = new TuringCommand[lines.Length];
             for (var i = 0; i < lines.Length; i++)
             {
+                TuringCommandType ParseCommandType(string[] words)
+                {
+                    return words[4] == LeftTypeString ? TuringCommandType.Left
+                        : words[4] == RightTypeString ? TuringCommandType.Right
+                        : words[4] == NeutralTypeString ? TuringCommandType.Neutral
+                        : throw new TuringParsingException();
+                }
+
                 char? ParseSymbol(string str)
                 {
                     return str == "null" ? (char?)null : char.Parse(str);
@@ -30,12 +38,8 @@ namespace Turing.IO
                 try
                 {
                     var words = lines[i].Split(' ');
-                    var type = words[4] == LeftTypeString ? TuringCommandType.Left
-                        : words[4] == RightTypeString ? TuringCommandType.Right
-                        : words[4] == NeutralTypeString ? TuringCommandType.Neutral
-                        : throw new TuringParsingException();
                     commands[i] = new TuringCommand
-                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), type);
+                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), ParseCommandType(words));
                 }
                 catch
                 {
