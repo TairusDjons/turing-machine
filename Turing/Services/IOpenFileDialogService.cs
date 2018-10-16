@@ -1,4 +1,4 @@
-﻿namespace Turing.IService
+﻿namespace Turing.Services
 {
     public interface IOpenFileDialogService
     {

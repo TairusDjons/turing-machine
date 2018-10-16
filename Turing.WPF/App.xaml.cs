@@ -3,7 +3,7 @@ using Autofac;
 using Autofac.Extras.CommonServiceLocator;
 using CommonServiceLocator;
 using Turing.IO;
-using Turing.IService;
+using Turing.Services;
 using Turing.ViewModels;
 using Turing.WPF.Services;
 
@@ -20,6 +20,7 @@ namespace Turing.WPF
             builder.RegisterType<TuringMachineFactory>().As<ITuringMachineFactory>().SingleInstance();
             builder.RegisterType<TuringCommandParser>().As<ITuringCommandParser>().SingleInstance();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>().SingleInstance();
+            builder.RegisterType<ErrorDialogService>().As<IErrorDialogService>().SingleInstance();
             builder.RegisterType<MainViewModel>().SingleInstance();
             var container = builder.Build();
             var csl = new AutofacServiceLocator(container);

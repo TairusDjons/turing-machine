@@ -1,8 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using System.Collections.Generic;
 using Turing.IO;
-using Turing.IService;
+using Turing.Services;
 
 namespace Turing.ViewModels
 {
@@ -12,9 +11,8 @@ namespace Turing.ViewModels
 
         private readonly ITuringMachineFactory turingMachineFactory;
 
-        private readonly IOpenFileDialogService dialogService;
-
-        private IEnumerable<TuringCommand> turingCommands;
+        private readonly IOpenFileDialogService openFileDialogService;
+        private readonly IErrorDialogService errorDialogService;
 
         private ITuringMachine turingMachine;
 
@@ -63,18 +61,18 @@ namespace Turing.ViewModels
         private RelayCommand openFileDialogCommand;
 
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand
-                ?? (openFileDialogCommand = new RelayCommand(() => 
+                ?? (openFileDialogCommand = new RelayCommand(() =>
                 {
-                    var name = dialogService.Open();
+                    var name = openFileDialogService.Open();
                     if (name != null)
                     {
                         try
                         {
-                            TuringMachine = turingMachineFactory.Create(turingCommands = commandParser.ParseFile(name));
+                            TuringMachine = turingMachineFactory.Create(commandParser.ParseFile(name));
                         }
                         catch (TuringParsingException)
                         {
-                            Input = "Неверный формат файла";
+                            errorDialogService.Open("Неверный формат файла");
                         }
                     }
                 }));
@@ -88,11 +86,17 @@ namespace Turing.ViewModels
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => TuringMachine?.IsEnd == true));
 
-        public MainViewModel(ITuringCommandParser commandParser, ITuringMachineFactory turingMachineFactory, IOpenFileDialogService dialogService)
+        public MainViewModel(
+                ITuringCommandParser commandParser,
+                ITuringMachineFactory turingMachineFactory,
+                IOpenFileDialogService openFileDialogService,
+                IErrorDialogService errorDialogService
+            )
         {
             this.commandParser = commandParser;
             this.turingMachineFactory = turingMachineFactory;
-            this.dialogService = dialogService;
+            this.openFileDialogService = openFileDialogService;
+            this.errorDialogService = errorDialogService;
         }
     }
 }
