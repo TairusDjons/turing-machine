@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using System.Collections.Generic;
 using Turing.IO;
-using Turing.Messages;
 using Turing.IService;
 
 namespace Turing.ViewModels
@@ -43,14 +42,6 @@ namespace Turing.ViewModels
             }
         }
 
-        private string output;
-
-        public string Output
-        {
-            get => output;
-            set => Set(ref output, value);
-        }
-
         private RelayCommand resetCommand;
 
         public RelayCommand ResetCommand => resetCommand
@@ -76,7 +67,16 @@ namespace Turing.ViewModels
                 {
                     var name = dialogService.Open();
                     if (name != null)
-                        TuringMachine = turingMachineFactory.Create(turingCommands = commandParser.ParseFile(name));
+                    {
+                        try
+                        {
+                            TuringMachine = turingMachineFactory.Create(turingCommands = commandParser.ParseFile(name));
+                        }
+                        catch (TuringParsingException)
+                        {
+                            Input = "Неверный формат файла";
+                        }
+                    }
                 }));
 
         private RelayCommand executeCommand;
