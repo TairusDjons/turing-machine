@@ -1,7 +1,9 @@
-﻿namespace Turing.IO
+﻿using System.Collections.Generic;
+
+namespace Turing.IO
 {
     public interface ITuringCommandParser
     {
-        TuringCommand[] ParseFile(string path);
+        IEnumerable<TuringCommand> ParseFile(string path);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -14,14 +14,19 @@ namespace Turing.IO
 
         public const string EmptySymbol = "null";
 
-        public TuringCommand[] ParseFile(string path)
+        public IEnumerable<TuringCommand> ParseFile(string path)
         {
             Debug.Assert(path != null);
 
             var lines = File.ReadAllLines(path);
-            var commands = new TuringCommand[lines.Length];
+            var commands = new List<TuringCommand>(lines.Length);
             for (var i = 0; i < lines.Length; i++)
             {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                {
+                    continue;
+                }
+
                 TuringCommandType ParseCommandType(string[] words)
                 {
                     return words[4] == LeftTypeString ? TuringCommandType.Left
@@ -37,9 +42,9 @@ namespace Turing.IO
 
                 try
                 {
-                    var words = lines[i].Split(' ');
-                    commands[i] = new TuringCommand
-                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), ParseCommandType(words));
+                    var words = lines[i].Split(' ', '\t');
+                    commands.Add(new TuringCommand
+                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), ParseCommandType(words)));
                 }
                 catch
                 {
