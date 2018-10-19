@@ -8,10 +8,10 @@
 
         public TuringCommandType CommandType { get; }
 
-        public TuringCommand(int currentCommand, char? currentSymbol, int nextCommand, char? nextSymbol, TuringCommandType commandType)
+        public TuringCommand(string currentState, char? currentSymbol, string nextState, char? nextSymbol, TuringCommandType commandType)
         {
-            CurrentState = new TuringState(currentCommand, currentSymbol);
-            NextState = new TuringState(nextCommand, nextSymbol);
+            CurrentState = new TuringState(currentState, currentSymbol);
+            NextState = new TuringState(nextState, nextSymbol);
             CommandType = commandType;
         }
     }

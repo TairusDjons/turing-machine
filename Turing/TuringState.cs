@@ -1,14 +1,21 @@
-﻿namespace Turing
+﻿using System;
+
+namespace Turing
 {
     public readonly struct TuringState
     {
-        public int CommandIndex { get; }
+        public string Name { get; }
 
         public char? Symbol { get; }
 
-        public TuringState(int commandIndex, char? symbol)
+        public TuringState(string name, char? symbol)
         {
-            CommandIndex = commandIndex;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(nameof(name), nameof(name));
+            }
+
+            Name = name;
             Symbol = symbol;
         }
     }

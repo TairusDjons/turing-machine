@@ -44,7 +44,7 @@ namespace Turing.IO
                 {
                     var words = lines[i].Split(' ', '\t');
                     commands.Add(new TuringCommand
-                        (int.Parse(words[0]), ParseSymbol(words[1]), int.Parse(words[2]), ParseSymbol(words[3]), ParseCommandType(words)));
+                        (words[0], ParseSymbol(words[1]), words[2], ParseSymbol(words[3]), ParseCommandType(words)));
                 }
                 catch
                 {
