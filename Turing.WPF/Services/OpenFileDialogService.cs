@@ -12,12 +12,11 @@ namespace Turing.WPF.Services
                 DefaultExt = ".turing",
                 Filter = "Turing files(*.turing)|*.turing|Text files(*.txt)|*.txt|All files(*.*)|*.*"
             };
-            if (dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() != true)
             {
-                return dialog.FileName;
+                return null;
             }
-
-            return null;
+            return dialog.FileName;
         }
     }
 }
