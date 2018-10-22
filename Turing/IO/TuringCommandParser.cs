@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Turing.IO
 {
@@ -13,6 +15,8 @@ namespace Turing.IO
         public const string NeutralTypeString = "n";
 
         public const string EmptySymbol = "null";
+
+        public static readonly IReadOnlyCollection<char> Separators = new ReadOnlyCollection<char>(new [] { ' ', '\t' });
 
         public IEnumerable<TuringCommand> ParseFile(string path)
         {
@@ -27,24 +31,24 @@ namespace Turing.IO
                     continue;
                 }
 
-                TuringCommandType ParseCommandType(string[] words)
+                TuringCommandType ParseCommandType(string word)
                 {
-                    return words[4] == LeftTypeString ? TuringCommandType.Left
-                        : words[4] == RightTypeString ? TuringCommandType.Right
-                        : words[4] == NeutralTypeString ? TuringCommandType.Neutral
+                    return word == LeftTypeString ? TuringCommandType.Left
+                        : word == RightTypeString ? TuringCommandType.Right
+                        : word == NeutralTypeString ? TuringCommandType.Neutral
                         : throw new TuringParsingException();
                 }
 
                 char? ParseSymbol(string str)
                 {
-                    return str == "null" ? (char?)null : char.Parse(str);
+                    return str == EmptySymbol ? (char?)null : char.Parse(str);
                 }
 
                 try
                 {
-                    var words = lines[i].Split(' ', '\t');
+                    var words = lines[i].Split(Separators.ToArray());
                     commands.Add(new TuringCommand
-                        (words[0], ParseSymbol(words[1]), words[2], ParseSymbol(words[3]), ParseCommandType(words)));
+                        (words[0], ParseSymbol(words[1]), words[2], ParseSymbol(words[3]), ParseCommandType(words[4])));
                 }
                 catch
                 {
