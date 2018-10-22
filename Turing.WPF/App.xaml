@@ -2,9 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Turing.WPF"
+			 xmlns:converters="clr-namespace:Turing.WPF.Converters"
 			 xmlns:vm="clr-namespace:Turing.ViewModels;assembly=Turing"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 		<vm:ViewModelLocator x:Key="Locator"></vm:ViewModelLocator>
+		<converters:OptionalCharToStringConverter x:Key="OptionalCharToStringConverter"></converters:OptionalCharToStringConverter>
     </Application.Resources>
 </Application>

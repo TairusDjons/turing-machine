@@ -4,17 +4,17 @@ namespace Turing
 {
     public interface ITuringMachine
     {
-        bool IsEnd { get; }
+        string StateName { get; set; }
 
-        string StateName { get; }
+        int MemoryIndex { get; set; }
 
-        int MemoryIndex { get; }
+        IList<char?> Memory { get; }
 
-        IReadOnlyList<char?> Memory { get; }
+        Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)> Commands { get; }
 
-        void Reset(string str, string startCommand);
+        void Reset(string memory = null, string stateName = null);
 
-        void Step();
+        bool Step();
 
         void Execute();
     }

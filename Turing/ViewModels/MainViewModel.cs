@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Turing.IO;
 using Turing.Services;
@@ -12,7 +13,30 @@ namespace Turing.ViewModels
         private readonly ITuringMachineFactory turingMachineFactory;
 
         private readonly IOpenFileDialogService openFileDialogService;
+        private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
+
+        private string initialMemory = "111";
+
+        public string InitialMemory
+        {
+            get => initialMemory;
+            set
+            {
+                Set(ref initialMemory, value);
+            }
+        }
+
+        private string initialStateName = "0";
+
+        public string InitialStateName
+        {
+            get => initialStateName;
+            set
+            {
+                Set(ref initialStateName, value);
+            }
+        }
 
         private ITuringMachine turingMachine;
 
@@ -28,26 +52,14 @@ namespace Turing.ViewModels
             }
         }
 
-        private string input = "";
-
-        public string Input
-        {
-            get => input;
-            set
-            {
-                Set(ref input, value);
-                TuringMachine?.Reset(value);
-            }
-        }
-
         private RelayCommand resetCommand;
 
         public RelayCommand ResetCommand => resetCommand
             ?? (resetCommand = new RelayCommand(() =>
             {
-                TuringMachine.Reset(Input);
+                TuringMachine.Reset(InitialMemory, InitialStateName);
                 RaisePropertyChanged(nameof(TuringMachine));
-            }, () => TuringMachine != null));
+            }, () => !(TuringMachine is null)));
 
         private RelayCommand stepCommand;
 
@@ -56,26 +68,7 @@ namespace Turing.ViewModels
             {
                 TuringMachine.Step();
                 RaisePropertyChanged(nameof(TuringMachine));
-            }, () => TuringMachine?.IsEnd == true));
-
-        private RelayCommand openFileDialogCommand;
-
-        public RelayCommand OpenFileDialogCommand => openFileDialogCommand
-                ?? (openFileDialogCommand = new RelayCommand(() =>
-                {
-                    var name = openFileDialogService.Open();
-                    if (name != null)
-                    {
-                        try
-                        {
-                            TuringMachine = turingMachineFactory.Create(commandParser.ParseFile(name));
-                        }
-                        catch (TuringParsingException)
-                        {
-                            errorDialogService.Open("Неверный формат файла");
-                        }
-                    }
-                }));
+            }, () => !(TuringMachine is null)));
 
         private RelayCommand executeCommand;
 
@@ -84,19 +77,59 @@ namespace Turing.ViewModels
             {
                 TuringMachine.Execute();
                 RaisePropertyChanged(nameof(TuringMachine));
-            }, () => TuringMachine?.IsEnd == true));
+            }, () => !(TuringMachine is null)));
+
+        private RelayCommand openFileDialogCommand;
+
+        public RelayCommand OpenFileDialogCommand => openFileDialogCommand
+                ?? (openFileDialogCommand = new RelayCommand(() =>
+                {
+                    var name = openFileDialogService.Open();
+                    if (!(name is null))
+                    {
+                        try
+                        {
+                            TuringMachine = turingMachineFactory.Create(commandParser.ParseFile(name), InitialMemory, InitialStateName);
+                        }
+                        catch (TuringParsingException)
+                        {
+                            errorDialogService.Open("Неверный формат файла");
+                        }
+                    }
+                }));
+
+        private RelayCommand saveFileDialogCommand;
+
+        public RelayCommand SaveFileDialogCommand => saveFileDialogCommand
+                ?? (saveFileDialogCommand = new RelayCommand(() =>
+                {
+                    var name = openFileDialogService.Open();
+                    if (!(name is null))
+                    {
+                        try
+                        {
+                            // TuringFormat.Emit(name, TuringMachine.Commands);
+                        }
+                        catch
+                        {
+                            errorDialogService.Open("Ошибка сохранения");
+                        }
+                    }
+                }));
 
         public MainViewModel(
                 ITuringCommandParser commandParser,
                 ITuringMachineFactory turingMachineFactory,
                 IOpenFileDialogService openFileDialogService,
+                ISaveFileDialogService saveFileDialogService,
                 IErrorDialogService errorDialogService
             )
         {
-            this.commandParser = commandParser;
-            this.turingMachineFactory = turingMachineFactory;
-            this.openFileDialogService = openFileDialogService;
-            this.errorDialogService = errorDialogService;
+            this.commandParser = commandParser ?? throw new ArgumentNullException(nameof(commandParser));
+            this.turingMachineFactory = turingMachineFactory ?? throw new ArgumentNullException(nameof(turingMachineFactory));
+            this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
+            this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));
+            this.errorDialogService = errorDialogService ?? throw new ArgumentNullException(nameof(errorDialogService));
         }
     }
 }

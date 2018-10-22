@@ -1,54 +1,50 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Turing
 {
     public sealed class TuringMachine : ITuringMachine
     {
-        private TuringMemory memory;
-
-        private readonly Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)> commandTransitions
+        public Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)> Commands { get; }
             = new Dictionary<TuringState, (TuringState State, TuringCommandType CommandType)>();
-        
-        public bool IsEnd { get; private set; }
 
-        public string StateName { get; private set; }
+        public string StateName { get; set; }
 
-        public int MemoryIndex { get; private set; }
+        public int MemoryIndex { get; set; }
 
-        public IReadOnlyList<char?> Memory => new ReadOnlyCollection<char?>(memory.ToList());
+        public IList<char?> Memory { get; private set; }
 
-        public TuringMachine(IEnumerable<TuringCommand> turingCommands, string str = "", string startStateName = "")
+        public TuringMachine(IEnumerable<TuringCommand> turingCommands, string memory = "", string stateName = "")
         {
-            Reset(str, startStateName);
+            Reset(memory, stateName);
             foreach (var command in turingCommands)
             {
-                commandTransitions[(command.CurrentState)] = (command.NextState, command.CommandType);
+                Commands[(command.CurrentState)] = (command.NextState, command.CommandType);
             }
         }
 
-        public void Reset(string str, string startStateName)
+        public void Reset(string memory, string stateName)
         {
-            memory = new TuringMemory(str);
-            StateName = startStateName;
+            Memory = new TuringMemory(memory);
+            StateName = stateName;
             MemoryIndex = 0;
-            IsEnd = true;
         }
 
-        public void Step()
+        public bool Step()
         {
-            if ((IsEnd = commandTransitions.TryGetValue(new TuringState(StateName, memory[MemoryIndex]), out var output)))
+            if (Commands.TryGetValue(new TuringState(StateName, Memory[MemoryIndex]), out var output))
             {
                 StateName = output.State.Name;
-                memory[MemoryIndex] = output.State.Symbol;
+                Memory[MemoryIndex] = output.State.Symbol;
                 MemoryIndex += (int)output.CommandType;
+                return true;
             }
+            return false;
         }
 
         public void Execute()
         {
-            do { Step(); } while (IsEnd);
+            while (Step());
         }
     }
 }

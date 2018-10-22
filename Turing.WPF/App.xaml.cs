@@ -20,6 +20,7 @@ namespace Turing.WPF
             builder.RegisterType<TuringMachineFactory>().As<ITuringMachineFactory>().SingleInstance();
             builder.RegisterType<TuringCommandParser>().As<ITuringCommandParser>().SingleInstance();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>().SingleInstance();
+            builder.RegisterType<SaveFileDialogService>().As<ISaveFileDialogService>().SingleInstance();
             builder.RegisterType<ErrorDialogService>().As<IErrorDialogService>().SingleInstance();
             builder.RegisterType<MainViewModel>().SingleInstance();
             var container = builder.Build();

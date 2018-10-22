@@ -74,6 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\OptionalCharToStringConverter.cs" />
     <Compile Include="Services\ErrorDialogService.cs" />
     <Compile Include="Services\OpenFileDialogService.cs" />
     <Compile Include="Services\SaveFileDialogService.cs" />
