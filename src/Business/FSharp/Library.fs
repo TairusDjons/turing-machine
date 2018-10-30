@@ -28,6 +28,7 @@ type Command = {
 }
 
 type Memory = Dictionary<int, Symbol>
+type Commands = Dictionary<CommandState, CommandAction>
 
 let defaultStartStateName = "q0" |> StateName |> Option.get
 let defaultMemory = Memory()
@@ -42,7 +43,7 @@ let defaultCommand = {
         NextStateName = "q0" |> StateName |> Option.get
     }
 }
-let defaultCommands = Dictionary<CommandState, CommandAction>([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
+let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
 
 type Machine(?commands, ?memory, ?stateName) =
     
