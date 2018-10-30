@@ -47,33 +47,17 @@ let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.Comm
 
 type Machine(?commands, ?memory, ?stateName) =
     
-    let mutable stateName = defaultArg stateName defaultStartStateName
-    let mutable memoryIndex = 0
-    let mutable memory = defaultArg memory defaultMemory
-    let mutable commands = defaultArg commands defaultCommands
-
-    member this.StateName
-        with get() = stateName
-        and set(value) = stateName <- value
-
-    member this.MemoryIndex
-        with get() = memoryIndex
-        and set(value) = memoryIndex <- value
-
-    member this.Memory
-        with get() = memory
-        and set(value) = memory <- value
-
-    member this.Commands
-        with get() = commands
-        and set(value) = commands <- value
+    member val StateName = defaultArg stateName defaultStartStateName with get, set
+    member val MemoryIndex = 0 with get, set
+    member val Memory = defaultArg memory defaultMemory with get, set
+    member val Commands = defaultArg commands defaultCommands with get, set
     
     member this.Reset memory stateName : unit =
         this.StateName <- stateName
         this.Memory <- memory
         
     member this.Step() : bool =
-        let success, action = commands.TryGetValue { Name = this.StateName; Symbol = this.Memory.[this.MemoryIndex] }
+        let success, action = this.Commands.TryGetValue { Name = this.StateName; Symbol = this.Memory.[this.MemoryIndex] }
         if success
             then
                 this.StateName <- action.NextStateName
