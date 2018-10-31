@@ -1,14 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Internal.fs" />
     <Compile Include="Library.fs" />
     <Compile Include="Format.fs" />
-    <Compile Include="IO.fs" />
   </ItemGroup>
 
   <ItemGroup />

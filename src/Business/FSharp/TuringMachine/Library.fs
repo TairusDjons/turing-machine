@@ -1,35 +1,34 @@
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module TuringMachine
+namespace TuringMachine
 
 open System.Collections.Generic
-open TuringMachine.Internal
 
-type StateName = NoWhiteSpaceString
-
-let StateName (value: string) : StateName option = NoWhiteSpaceString value
+type StateNumber = int32
 
 type Symbol = char
 
 type Direction = | Left = -1 | Pause = 0 | Right = 1
 
-[<Literal>]
-let Left = Direction.Left
+[<AutoOpen>]
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module Direction =
+    [<Literal>]
+    let Left = Direction.Left
 
-[<Literal>]
-let Pause = Direction.Pause
+    [<Literal>]
+    let Pause = Direction.Pause
 
-[<Literal>]
-let Right = Direction.Right
+    [<Literal>]
+    let Right = Direction.Right
 
 type CommandState = {
-    Name : StateName
+    Number : StateNumber
     Symbol : Symbol
 }
 
 type CommandAction = {
     NewSymbol : Symbol
     Direction : Direction
-    NextStateName : StateName
+    NextStateNumber : StateNumber
 }
 
 type Command = {
@@ -39,7 +38,10 @@ type Command = {
 
 type MemoryIndex = int
 
-let defaultMemoryChar = '#'
+[<AutoOpen>]
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module MemoryModule =
+    let defaultMemoryChar = '#'
 
 type Memory(?memoryChar) = 
     let dict : Dictionary<MemoryIndex, Symbol> = Dictionary<MemoryIndex, Symbol>()
@@ -51,38 +53,41 @@ type Memory(?memoryChar) =
                 then result
                 else this.MemoryChar
         and set index value = dict.[index] <- value
-    member this.Clear() = dict.Clear()
+    member __.Clear() = dict.Clear()
 
 type Commands = Dictionary<CommandState, CommandAction>
 
-let defaultStartStateName = "q0" |> StateName |> Option.get
-let defaultMemory = Memory()
-let defaultCommand = {
-    CommandState = {
-        Name = "q0" |> StateName |> Option.get
-        Symbol = '1'
+[<AutoOpen>]
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module MachineModule =
+    let defaultStartStateNumber = 0
+    let defaultMemory = Memory()
+    let defaultCommand = {
+        CommandState = {
+            Number = 0
+            Symbol = '1'
+        }
+        CommandAction = {
+            NewSymbol = '0'
+            Direction = Direction.Right
+            NextStateNumber = 0
+        }
     }
-    CommandAction = {
-        NewSymbol = '0'
-        Direction = Direction.Right
-        NextStateName = "q0" |> StateName |> Option.get
-    }
-}
-let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
+    let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
 
-type Machine(?commands, ?memory, ?stateName) =
-    member val StateName = defaultArg stateName defaultStartStateName with get, set
+type Machine(?commands, ?memory, ?stateNumber) =
+    member val StateNumber = defaultArg stateNumber defaultStartStateNumber with get, set
     member val MemoryIndex = 0 with get, set
     member val Memory = defaultArg memory defaultMemory with get, set
     member val Commands = defaultArg commands defaultCommands with get, set
     member this.Reset memory stateName : unit =
-        this.StateName <- stateName
+        this.StateNumber <- stateName
         this.Memory <- memory
     member this.Step() : bool =
-        let success, action = this.Commands.TryGetValue { Name = this.StateName; Symbol = this.Memory.[this.MemoryIndex] }
+        let success, action = this.Commands.TryGetValue { Number = this.StateNumber; Symbol = this.Memory.[this.MemoryIndex] }
         if success
             then
-                this.StateName <- action.NextStateName
+                this.StateNumber <- action.NextStateNumber
                 this.Memory.[this.MemoryIndex] <- action.NewSymbol
                 this.MemoryIndex <- this.MemoryIndex + int action.Direction
                 true
