@@ -1,3 +1,4 @@
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module TuringMachine
 
 open System.Collections.Generic
@@ -10,6 +11,15 @@ let StateName (value: string) : StateName option = NoWhiteSpaceString value
 type Symbol = char option
 
 type Direction = | Left = -1 | Pause = 0 | Right = 1
+
+[<Literal>]
+let Left = Direction.Left
+
+[<Literal>]
+let Pause = Direction.Pause
+
+[<Literal>]
+let Right = Direction.Right
 
 type CommandState = {
     Name : StateName
@@ -28,6 +38,7 @@ type Command = {
 }
 
 type Memory = Dictionary<int, Symbol>
+
 type Commands = Dictionary<CommandState, CommandAction>
 
 let defaultStartStateName = "q0" |> StateName |> Option.get

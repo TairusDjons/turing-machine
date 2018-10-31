@@ -1,4 +1,5 @@
-﻿module TuringMachine.Internal
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module TuringMachine.Internal
 
     type NoWhiteSpaceString = | NoWhiteSpaceString of string
 
