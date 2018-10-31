@@ -5,9 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Format.fs" />
     <Compile Include="Internal.fs" />
     <Compile Include="Library.fs" />
+    <Compile Include="Format.fs" />
+    <Compile Include="IO.fs" />
+  </ItemGroup>
+
+  <ItemGroup />
+
+  <ItemGroup>
+    <PackageReference Include="FParsec" Version="1.0.3" />
   </ItemGroup>
 
 </Project>
