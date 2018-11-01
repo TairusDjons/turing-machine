@@ -46,6 +46,14 @@ let commandRule = commandStateRule .>>. (spaces1 >>. commandActionRule) |>> fun 
 
 let commandsRule = many (spaces >>. commandRule .>> spaces)
 
-let saveCommands filename commands format = ()
+exception UnwrapErrorException of string
 
-let loadCommands filename = ()
+let unwrapParserResult = function
+        | ParserResult.Success(result, _state, _position) -> result
+        | ParserResult.Failure(str, _error, _state) -> raise <| UnwrapErrorException str
+
+module IO =
+    open System.Text
+
+    let ParseCommands (path : string) (encoding : Encoding) =
+        runParserOnFile commandsRule () path encoding |> unwrapParserResult
