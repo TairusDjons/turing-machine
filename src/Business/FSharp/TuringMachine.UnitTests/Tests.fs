@@ -28,9 +28,7 @@ let simpleCommand : Command = {
     }
 }
 
-let prun rule str = run rule str |> function
-        | ParserResult.Success(result, _state, _position) -> result
-        | ParserResult.Failure(str, _error, _state) -> raise <| Exception str
+let prun rule str = run rule str |> unwrapParserResult
 
 [<Fact>]
 let parseSymbolWorks() : unit =

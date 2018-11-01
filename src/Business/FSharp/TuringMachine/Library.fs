@@ -41,19 +41,20 @@ type MemoryIndex = int
 [<AutoOpen>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module MemoryModule =
-    let defaultMemoryChar = '#'
+    let defaultPolyfillChar = '#'
 
 type Memory(?memoryChar) = 
     let dict : Dictionary<MemoryIndex, Symbol> = Dictionary<MemoryIndex, Symbol>()
-    member val MemoryChar = defaultArg memoryChar defaultMemoryChar with get, set
+    member val PolyfillChar = defaultArg memoryChar defaultPolyfillChar with get, set
     member this.Item
         with get index =
             let success, result = dict.TryGetValue(index)
             if success
                 then result
-                else this.MemoryChar
+                else this.PolyfillChar
         and set index value = dict.[index] <- value
     member __.Clear() = dict.Clear()
+    new() = Memory(defaultPolyfillChar)
 
 type Commands = Dictionary<CommandState, CommandAction>
 
@@ -75,7 +76,7 @@ module MachineModule =
     }
     let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
 
-type Machine(?commands, ?memory, ?stateNumber) =
+type Machine(?memory, ?stateNumber, ?commands) =
     member val StateNumber = defaultArg stateNumber defaultStartStateNumber with get, set
     member val MemoryIndex = 0 with get, set
     member val Memory = defaultArg memory defaultMemory with get, set
@@ -93,4 +94,5 @@ type Machine(?commands, ?memory, ?stateNumber) =
                 true
             else
                 false
-    member this.Execute : unit = while this.Step() do ()
+    member this.Execute() : unit = while this.Step() do ()
+    new(memory, stateNumber) = Machine(memory, stateNumber, defaultCommands)
