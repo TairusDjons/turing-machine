@@ -10,8 +10,4 @@
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Business\FSharp\TuringMachine\TuringMachine.FSharp.fsproj" />
-  </ItemGroup>
-
 </Project>

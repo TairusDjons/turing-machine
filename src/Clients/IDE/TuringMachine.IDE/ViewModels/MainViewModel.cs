@@ -4,12 +4,12 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
 using static TuringMachine.Format;
-using static TuringMachine.Format.IO;
 
 namespace TuringMachine.IDE.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
+        private readonly ITuringCommandsParser turingCommandsParser;
         private readonly IOpenFileDialogService openFileDialogService;
         private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
@@ -76,16 +76,12 @@ namespace TuringMachine.IDE.ViewModels
         public RelayCommand OpenFileDialogCommand => openFileDialogCommand
                 ?? (openFileDialogCommand = new RelayCommand(() =>
                 {
-                    var name = openFileDialogService.Open();
-                    if (!(name is null))
+                    var filepath = openFileDialogService.Open();
+                    if (!(filepath is null))
                     {
                         try
                         {
-                            TuringMachine.Commands.Clear();
-                            foreach (var command in ParseCommands(name, Encoding.UTF8))
-                            {
-                                TuringMachine.Commands[command.CommandState] = command.CommandAction;
-                            }
+                            TuringMachine.Commands.Update(turingCommandsParser.Parse(filepath, Encoding.UTF8));
                         }
                         catch (Exception e)
                         {
@@ -109,6 +105,7 @@ namespace TuringMachine.IDE.ViewModels
                     var name = openFileDialogService.Open();
                     if (!(name is null))
                     {
+                        // TODO: write emitter
                         //try
                         //{
                         //    // TuringFormat.Emit(name, TuringMachine.Commands);
@@ -121,12 +118,14 @@ namespace TuringMachine.IDE.ViewModels
                 }));
 
         public MainViewModel(
+                ITuringCommandsParser turingCommandsParser,
                 IOpenFileDialogService openFileDialogService,
                 ISaveFileDialogService saveFileDialogService,
                 IErrorDialogService errorDialogService
             )
         {
             TuringMachine = new Machine(InitialMemory, InitialStateNumber);
+            this.turingCommandsParser = turingCommandsParser ?? throw new ArgumentNullException(nameof(turingCommandsParser));
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));
             this.errorDialogService = errorDialogService ?? throw new ArgumentNullException(nameof(errorDialogService));
