@@ -32,15 +32,15 @@ type CommandAction = {
 }
 
 type Command = {
-    CommandState : CommandState
-    CommandAction : CommandAction
+    State : CommandState
+    Action : CommandAction
 }
 
 type MemoryIndex = int
 
 [<AutoOpen>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
-module MemoryModule =
+module Memory =
     let defaultPolyfillChar = '#'
 
 type Memory(?memoryChar) = 
@@ -56,7 +56,16 @@ type Memory(?memoryChar) =
     member __.Clear() = dict.Clear()
     new() = Memory(defaultPolyfillChar)
 
-type Commands = Dictionary<CommandState, CommandAction>
+type Commands(?commands : IEnumerable<Command>) =
+    let dict : Dictionary<CommandState, CommandAction> = Dictionary<CommandState, CommandAction>()
+    member __.Item
+        with get index = dict.[index]
+        and set index value = dict.[index] <- value
+    member __.Clear() = dict.Clear()
+    member this.Update (commands : IEnumerable<Command>) =
+        this.Clear()
+        for command in commands do this.[command.State] <- command.Action
+    member __.TryGetAction state = dict.TryGetValue(state)
 
 [<AutoOpen>]
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -64,17 +73,17 @@ module MachineModule =
     let defaultStartStateNumber = 0
     let defaultMemory = Memory()
     let defaultCommand = {
-        CommandState = {
+        State = {
             Number = 0
             Symbol = '1'
         }
-        CommandAction = {
+        Action = {
             NewSymbol = '0'
             Direction = Direction.Right
             NextStateNumber = 0
         }
     }
-    let defaultCommands = Commands([defaultCommand.CommandState, defaultCommand.CommandAction] |> Map.ofList)
+    let defaultCommands = Commands([defaultCommand])
 
 type Machine(?memory, ?stateNumber, ?commands) =
     member val StateNumber = defaultArg stateNumber defaultStartStateNumber with get, set
@@ -85,7 +94,7 @@ type Machine(?memory, ?stateNumber, ?commands) =
         this.StateNumber <- stateName
         this.Memory <- memory
     member this.Step() : bool =
-        let success, action = this.Commands.TryGetValue { Number = this.StateNumber; Symbol = this.Memory.[this.MemoryIndex] }
+        let success, action = this.Commands.TryGetAction { Number = this.StateNumber; Symbol = this.Memory.[this.MemoryIndex] }
         if success
             then
                 this.StateNumber <- action.NextStateNumber

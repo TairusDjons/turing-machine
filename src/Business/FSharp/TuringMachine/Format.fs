@@ -32,19 +32,19 @@ let commandStateRule =
     }
 
 let commandActionRule =
-    symbolRule .>>. (spaces1 >>. directionRule) .>>. (spaces1 >>. stateNumberRule)
-    |>> fun ((symbol, direction), number) -> {
+    stateNumberRule .>>. (spaces1 >>. symbolRule) .>>. (spaces1 >>. directionRule)
+    |>> fun ((number, symbol), direction) -> {
         NextStateNumber = number
-        Direction = direction
         NewSymbol = symbol
+        Direction = direction
     }
 
 let commandRule = commandStateRule .>>. (spaces1 >>. commandActionRule) |>> fun (state, action) -> {
-    CommandState = state
-    CommandAction = action
+    State = state
+    Action = action
 }
 
-let commandsRule = many (spaces >>. commandRule .>> spaces)
+let commandsRule = many1 (spaces >>. commandRule .>> spaces)
 
 exception UnwrapErrorException of string
 
