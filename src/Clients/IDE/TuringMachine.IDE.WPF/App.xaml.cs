@@ -17,10 +17,10 @@ namespace TuringMachine.IDE.WPF
         {
             var builder = new ContainerBuilder();
 
-            builder
-                .RegisterType<TuringCommandsParser>()
-                .AsImplementedInterfaces()
-                .SingleInstance();
+            //builder
+            //    .RegisterType<TuringCommandsParser>()
+            //    .AsImplementedInterfaces()
+            //    .SingleInstance();
             builder
                 .RegisterType<OpenFileDialogService>()
                 .AsImplementedInterfaces()
