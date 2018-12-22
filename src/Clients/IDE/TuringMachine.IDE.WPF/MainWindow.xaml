@@ -1,0 +1,64 @@
+<Window x:Class="TuringMachine.IDE.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Turing Machine IDE"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    <Window.Resources>
+        <Style x:Key="BaseStyle" TargetType="Control">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="32"/>
+        </Style>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="72, 12, 72, 0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="130,4,130,4"/>
+        </Style>
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Margin" Value="72,0"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="0,28,0,0">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Initial State Name:</TextBlock>
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding InitialStateName}" />
+            <TextBlock Style="{StaticResource TextBlockStyle}">Initial Memory:</TextBlock>
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding InitialMemory}" />
+            <TextBlock Style="{StaticResource TextBlockStyle}">State Name:</TextBlock>
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding TuringMachine.StateName}" />
+            <TextBlock Style="{StaticResource TextBlockStyle}">Memory:</TextBlock>
+            <!--<ScrollViewer Style="{StaticResource BaseStyle}" Margin="72,4,72,4">
+                <ListBox ItemsSource="{Binding TuringMachine.Memory}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <TextBox Text="{Binding ., Converter={StaticResource OptionalCharToStringConverter}}" MaxLength="1"></TextBox>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>-->
+
+            <Button Style="{StaticResource ButtonStyle}" Command="{Binding OpenFileDialogCommand}" Content="Open" />
+            <Button Style="{StaticResource ButtonStyle}" Command="{Binding SaveFileDialogCommand}" Content="Save" />
+            <Button Style="{StaticResource ButtonStyle}" Command="{Binding ExecuteCommand}" Content="Execute" />
+            <Button Style="{StaticResource ButtonStyle}" Command="{Binding StepCommand}" Content="Step" />
+            <Button Style="{StaticResource ButtonStyle}" Command="{Binding ResetCommand}" Content="Reset" />
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+
+        </StackPanel>
+    </Grid>
+</Window>

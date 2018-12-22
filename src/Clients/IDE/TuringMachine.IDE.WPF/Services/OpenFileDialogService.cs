@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
-using Turing.Services;
+using TuringMachine.IDE.Services;
 
-namespace Turing.WPF.Services
+namespace TuringMachine.IDE.WPF.Services
 {
     public class OpenFileDialogService : IOpenFileDialogService
     {

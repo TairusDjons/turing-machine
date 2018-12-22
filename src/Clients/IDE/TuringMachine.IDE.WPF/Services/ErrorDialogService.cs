@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using Turing.Services;
+using System.Windows;
+using TuringMachine.IDE.Services;
 
-namespace Turing.WPF.Services
+namespace TuringMachine.IDE.WPF.Services
 {
     public class ErrorDialogService : IErrorDialogService
     {

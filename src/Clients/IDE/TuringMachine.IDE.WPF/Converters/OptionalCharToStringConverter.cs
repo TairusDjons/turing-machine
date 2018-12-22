@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Turing.WPF.Converters
+namespace TuringMachine.IDE.WPF.Converters
 {
     [ValueConversion(typeof(char?), typeof(string))]
     public class OptionalCharToStringConverter : IValueConverter

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Turing.WPF.Properties
+namespace TuringMachine.IDE.WPF.Properties
 {
 
 
