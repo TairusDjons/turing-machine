@@ -3,7 +3,6 @@ using System.Text;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
-using static TuringMachine.Format;
 
 namespace TuringMachine.IDE.ViewModels
 {
@@ -14,6 +13,14 @@ namespace TuringMachine.IDE.ViewModels
         private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
 
+        private int initialMemoryIndex;
+
+        public int InitialMemoryIndex
+        {
+            get => initialMemoryIndex;
+            set => Set(ref initialMemoryIndex, value);
+        }
+
         private Memory initialMemory = new Memory();
 
         public Memory InitialMemory
@@ -22,7 +29,7 @@ namespace TuringMachine.IDE.ViewModels
             set => Set(ref initialMemory, value);
         }
 
-        private int initialStateNumber = 0;
+        private int initialStateNumber;
 
         public int InitialStateNumber
         {
@@ -49,7 +56,7 @@ namespace TuringMachine.IDE.ViewModels
         public RelayCommand ResetCommand => resetCommand
             ?? (resetCommand = new RelayCommand(() =>
             {
-                TuringMachine.Reset(InitialMemory, InitialStateNumber);
+                TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, InitialMemory);
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -81,18 +88,11 @@ namespace TuringMachine.IDE.ViewModels
                     {
                         try
                         {
-                            TuringMachine.Commands.Update(turingCommandsParser.Parse(filepath, Encoding.UTF8));
+                            TuringMachine.Commands = new Commands(turingCommandsParser.Parse(filepath, Encoding.UTF8));
                         }
-                        catch (Exception e)
+                        catch
                         {
-                            var error = "Ошибка";
-                            switch (e)
-                            {
-                                case UnwrapErrorException ex:
-                                    error = "Неверный формат файла";
-                                    break;
-                            }
-                            errorDialogService.Open(error);
+                            errorDialogService.Open("Произошла ошибка");
                         }
                     }
                 }));
@@ -124,7 +124,7 @@ namespace TuringMachine.IDE.ViewModels
                 IErrorDialogService errorDialogService
             )
         {
-            TuringMachine = new Machine(InitialMemory, InitialStateNumber);
+            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, InitialMemory);
             this.turingCommandsParser = turingCommandsParser ?? throw new ArgumentNullException(nameof(turingCommandsParser));
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));

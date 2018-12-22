@@ -11,7 +11,10 @@ namespace TuringMachine
         public char this[int index]
         {
             get => dict.TryGetValue(index, out var value) ? value : PolyfillChar;
-            set => dict[index] = value;
+            set
+            {
+                if (value != PolyfillChar) dict[index] = value;
+            }
         }
 
         public void Clear()

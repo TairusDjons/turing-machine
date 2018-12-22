@@ -10,10 +10,27 @@ namespace TuringMachine
 
         public Commands Commands { get; set; } = new Commands();
 
-        public void Reset(int stateNumber, Memory memory)
+        public Machine()
+        {
+        }
+
+        public Machine(int stateNumber, int memoryIndex, Memory memory)
+        {
+            Reset(stateNumber, memoryIndex, memory);
+        }
+
+        public void Reset(int stateNumber = 0, int memoryIndex = 0, Memory memory = null)
         {
             StateNumber = stateNumber;
-            Memory = memory;
+            MemoryIndex = memoryIndex;
+            if (memory is null)
+            {
+                Memory.Clear();
+            }
+            else
+            {
+                Memory = memory;
+            }
         }
 
         public bool Step()
