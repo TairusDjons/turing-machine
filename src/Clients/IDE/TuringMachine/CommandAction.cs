@@ -6,6 +6,6 @@ namespace TuringMachine
 
         public Direction Direction { get; set; }
 
-        public int NextStateNumber { get; set; }
+        public int NextNumber { get; set; }
     }
 }

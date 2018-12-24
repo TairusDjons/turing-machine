@@ -40,7 +40,7 @@ namespace TuringMachine
             {
                 return false;
             }
-            StateNumber = action.NextStateNumber;
+            StateNumber = action.NextNumber;
             Memory[MemoryIndex] = action.NewSymbol;
             MemoryIndex += (int)action.Direction;
             return true;
