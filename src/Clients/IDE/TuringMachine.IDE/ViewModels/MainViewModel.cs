@@ -2,6 +2,7 @@ using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
+using TuringMachine.Format;
 
 namespace TuringMachine.IDE.ViewModels
 {
@@ -10,6 +11,7 @@ namespace TuringMachine.IDE.ViewModels
         private readonly IOpenFileDialogService openFileDialogService;
         private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
+        private readonly ITuringEmitter turingMachineFormat;
 
         private int initialMemoryIndex;
 
@@ -65,6 +67,7 @@ namespace TuringMachine.IDE.ViewModels
             }
         }
 
+
         private RelayCommand resetCommand;
 
         public RelayCommand ResetCommand => resetCommand
@@ -102,7 +105,7 @@ namespace TuringMachine.IDE.ViewModels
                     {
                         try
                         {
-                            // TuringMachine.Commands = new Commands(turingCommandsParser.Parse(filepath, Encoding.UTF8));
+                            TuringMachine.Commands = new Commands(turingMachineFormat.Parse(filepath));
                         }
                         catch
                         {
@@ -120,18 +123,19 @@ namespace TuringMachine.IDE.ViewModels
                     if (!(name is null))
                     {
                         // TODO: write emitter
-                        //try
-                        //{
-                        //    // TuringFormat.Emit(name, TuringMachine.Commands);
-                        //}-
-                        //catch
-                        //{
-                        //    errorDialogService.Open("Ошибка сохранения");
-                        //}
+                        try
+                        {
+                             turingMachineFormat.Emit(name, TuringMachine.Commands);
+                        }
+                        catch
+                        {
+                            errorDialogService.Open("Ошибка сохранения");
+                        }
                     }
                 }));
 
         public MainViewModel(
+                ITuringEmitter turingMachineFormat,
                 IOpenFileDialogService openFileDialogService,
                 ISaveFileDialogService saveFileDialogService,
                 IErrorDialogService errorDialogService
@@ -146,6 +150,8 @@ namespace TuringMachine.IDE.ViewModels
                 }
             };
             RaisePropertyChanged(nameof(TuringMachine));
+            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, initialMemory);
+            this.turingMachineFormat = turingMachineFormat ?? throw new ArgumentNullException(nameof(turingMachineFormat)); ;
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));
             this.errorDialogService = errorDialogService ?? throw new ArgumentNullException(nameof(errorDialogService));
