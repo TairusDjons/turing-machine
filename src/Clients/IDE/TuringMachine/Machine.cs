@@ -1,3 +1,5 @@
+using System;
+
 namespace TuringMachine
 {
     public class Machine
@@ -35,8 +37,12 @@ namespace TuringMachine
 
         public bool Step()
         {
-            var action = Commands.GetAction(new CommandState() { Number = StateNumber, Symbol = Memory[MemoryIndex] });
-            if (action is null)
+            CommandAction action;
+            try
+            {
+                action = Commands.GetAction(new CommandState() { Number = StateNumber, Symbol = Memory[MemoryIndex] });
+            }
+            catch (Exception e)
             {
                 return false;
             }

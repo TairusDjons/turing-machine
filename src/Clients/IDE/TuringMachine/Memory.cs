@@ -4,7 +4,7 @@ namespace TuringMachine
 {
     public class Memory
     {
-        public readonly Dictionary<int, char> dict = new Dictionary<int, char>();
+        public Dictionary<int, char> dict = new Dictionary<int, char>();
 
         public char EmptySymbol { get; set; }
 

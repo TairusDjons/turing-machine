@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
@@ -21,12 +22,24 @@ namespace TuringMachine.IDE.ViewModels
             set => Set(ref initialMemoryIndex, value);
         }
 
+        private List<char> currentMemory;
+
+        public List<char> CurrentMemory
+        {
+            get => currentMemory;
+            set => Set(ref currentMemory, value);
+        }
+
         private string initialMemory = "0000";
 
         public string InitialMemory
         {
             get => initialMemory;
-            set => Set(ref initialMemory, value);
+            set
+            {
+                Set(ref initialMemory, value);
+                TuringMachine.Memory = GetInitialMemory();
+            }
         }
 
         private int initialMemoryOffset;
@@ -74,6 +87,7 @@ namespace TuringMachine.IDE.ViewModels
             ?? (resetCommand = new RelayCommand(() =>
             {
                 TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, GetInitialMemory());
+                CurrentMemory = new List<char>(TuringMachine.Memory.dict.Values);
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -83,6 +97,7 @@ namespace TuringMachine.IDE.ViewModels
             ?? (stepCommand = new RelayCommand(() =>
             {
                 TuringMachine.Step();
+                CurrentMemory = new List<char>(TuringMachine.Memory.dict.Values);
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -92,6 +107,7 @@ namespace TuringMachine.IDE.ViewModels
             ?? (executeCommand = new RelayCommand(() =>
             {
                 TuringMachine.Execute();
+                CurrentMemory = new List<char>(TuringMachine.Memory.dict.Values);
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -106,6 +122,7 @@ namespace TuringMachine.IDE.ViewModels
                         try
                         {
                             TuringMachine.Commands = new Commands(turingMachineFormat.Parse(filepath));
+                            RaisePropertyChanged(nameof(TuringMachine));
                         }
                         catch
                         {
@@ -150,7 +167,7 @@ namespace TuringMachine.IDE.ViewModels
                 }
             };
             RaisePropertyChanged(nameof(TuringMachine));
-            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, initialMemory);
+            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, GetInitialMemory());
             this.turingMachineFormat = turingMachineFormat ?? throw new ArgumentNullException(nameof(turingMachineFormat)); ;
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));

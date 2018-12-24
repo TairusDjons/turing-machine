@@ -10,11 +10,15 @@ namespace TuringMachine.Format
         public void Emit(string name, Commands commands)
         {
             var fileText = new List<string>();
-            foreach (var c in commands.dict)
+            foreach (var c in commands)
             {
-                string line = c.Key.Number.ToString() +' ' + c.Key.Symbol + ' '
-                             + c.Value.NextStateNumber.ToString() + ' ' + c.Value.NewSymbol
-                             + ' ' + c.Value.Direction.ToString();
+                var type = c.Action.Direction == Direction.Left ? "l"
+                    : c.Action.Direction == Direction.Right ? "r"
+                    : c.Action.Direction == Direction.Pause ? "n"
+                    : throw new Exception();
+                string line = c.State.Number.ToString() +' ' + c.State.Symbol + ' '
+                             + c.Action.NextNumber.ToString() + ' ' + c.Action.NewSymbol
+                             + ' ' + type;
                 fileText.Add(line);
             }
             File.WriteAllLines(name, fileText);
@@ -33,8 +37,8 @@ namespace TuringMachine.Format
                     : throw new Exception();
                 try
                 {
-                    commands.Add(new Command(new CommandState(int.Parse(words[0]), char.Parse(words[1])),
-                                 new CommandAction(char.Parse(words[3]), type, int.Parse(words[2]))));
+                    commands.Add(new Command(int.Parse(words[0]), char.Parse(words[1]),
+                                 int.Parse(words[2]), char.Parse(words[3]), type));
                 }
                 catch(Exception e)
                 { }

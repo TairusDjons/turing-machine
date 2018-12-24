@@ -1,7 +1,7 @@
 using System;
 namespace TuringMachine
 {
-    public class CommandState: IEquatable<CommandState>
+    public class CommandState : IEquatable<CommandState>
     {
         public int Number { get; set; }
 
@@ -30,6 +30,16 @@ namespace TuringMachine
         {
             return this.Number == other.Number &&
                    this.Symbol == other.Symbol;
+        }
+
+        public static bool operator ==(CommandState s1, CommandState s2)
+        {
+            return s1.Number == s2.Number && s1.Symbol == s2.Symbol;
+        }
+
+        public static bool operator !=(CommandState s1, CommandState s2)
+        {
+            return s1.Number != s2.Number && s1.Symbol != s2.Symbol;
         }
     }
 }
