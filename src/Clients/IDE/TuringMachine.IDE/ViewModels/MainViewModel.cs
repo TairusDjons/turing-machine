@@ -3,15 +3,16 @@ using System.Text;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
+using TuringMachine.Format;
 
 namespace TuringMachine.IDE.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
-        private readonly ITuringCommandsParser turingCommandsParser;
         private readonly IOpenFileDialogService openFileDialogService;
         private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
+        private readonly ITuringEmitter turingMachineFormat;
 
         private int initialMemoryIndex;
 
@@ -23,10 +24,24 @@ namespace TuringMachine.IDE.ViewModels
 
         private Memory initialMemory = new Memory();
 
-        public Memory InitialMemory
+        private string stringMemory;
+
+        public string InitialMemory
         {
-            get => initialMemory;
-            set => Set(ref initialMemory, value);
+            get => stringMemory;
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                    initialMemory[i] = value[i];
+                Set(ref stringMemory, value);
+            }
+        }
+
+        private string initStringMemory;
+        public string InitialStringMemory
+        {
+            get => initStringMemory;
+            set => Set(ref initStringMemory, value);
         }
 
         private int initialStateNumber;
@@ -51,12 +66,13 @@ namespace TuringMachine.IDE.ViewModels
             }
         }
 
+
         private RelayCommand resetCommand;
 
         public RelayCommand ResetCommand => resetCommand
             ?? (resetCommand = new RelayCommand(() =>
             {
-                TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, InitialMemory);
+                TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, initialMemory);
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -88,7 +104,7 @@ namespace TuringMachine.IDE.ViewModels
                     {
                         try
                         {
-                            TuringMachine.Commands = new Commands(turingCommandsParser.Parse(filepath, Encoding.UTF8));
+                            TuringMachine.Commands = new Commands(turingMachineFormat.Parse(filepath));
                         }
                         catch
                         {
@@ -106,26 +122,26 @@ namespace TuringMachine.IDE.ViewModels
                     if (!(name is null))
                     {
                         // TODO: write emitter
-                        //try
-                        //{
-                        //    // TuringFormat.Emit(name, TuringMachine.Commands);
-                        //}-
-                        //catch
-                        //{
-                        //    errorDialogService.Open("Ошибка сохранения");
-                        //}
+                        try
+                        {
+                             turingMachineFormat.Emit(name, TuringMachine.Commands);
+                        }
+                        catch
+                        {
+                            errorDialogService.Open("Ошибка сохранения");
+                        }
                     }
                 }));
 
         public MainViewModel(
-                ITuringCommandsParser turingCommandsParser,
+                ITuringEmitter turingMachineFormat,
                 IOpenFileDialogService openFileDialogService,
                 ISaveFileDialogService saveFileDialogService,
                 IErrorDialogService errorDialogService
             )
         {
-            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, InitialMemory);
-            this.turingCommandsParser = turingCommandsParser ?? throw new ArgumentNullException(nameof(turingCommandsParser));
+            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, initialMemory);
+            this.turingMachineFormat = turingMachineFormat ?? throw new ArgumentNullException(nameof(turingMachineFormat)); ;
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));
             this.errorDialogService = errorDialogService ?? throw new ArgumentNullException(nameof(errorDialogService));

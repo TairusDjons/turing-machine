@@ -4,7 +4,7 @@ namespace TuringMachine
 {
     public class Commands
     {
-        private readonly Dictionary<CommandState, CommandAction> dict = new Dictionary<CommandState, CommandAction>();
+        public readonly Dictionary<CommandState, CommandAction> dict = new Dictionary<CommandState, CommandAction>();
 
         public CommandAction this[CommandState index]
         {

@@ -28,28 +28,26 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Margin="0,28,0,0">
+        <StackPanel Margin="0,10,0,0">
             <TextBlock Style="{StaticResource TextBlockStyle}">Initial State Name:</TextBlock>
-            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding InitialStateName}" />
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding InitialStateNumber}" />
             <TextBlock Style="{StaticResource TextBlockStyle}">Initial Memory:</TextBlock>
             <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding InitialMemory}" />
-            <TextBlock Style="{StaticResource TextBlockStyle}">State Name:</TextBlock>
-            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding TuringMachine.StateName}" />
+            <TextBlock Style="{StaticResource TextBlockStyle}">State Number:</TextBlock>
+            <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding TuringMachine.StateNumber}" />
             <TextBlock Style="{StaticResource TextBlockStyle}">Memory:</TextBlock>
-            <!--<ScrollViewer Style="{StaticResource BaseStyle}" Margin="72,4,72,4">
-                <ListBox ItemsSource="{Binding TuringMachine.Memory}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
+            <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Style="{StaticResource BaseStyle}" Margin="72,4,72,4" Height="44">
+                <ListBox ItemsSource = "{Binding TuringMachine.Memory.dict}"
+                         SelectedIndex="{Binding TuringMachine.MemoryIndex}">
                     <ListBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <TextBox Text="{Binding ., Converter={StaticResource OptionalCharToStringConverter}}" MaxLength="1"></TextBox>
-                        </ItemContainerTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Path = Value}" />
+                            </StackPanel>
+                        </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </ScrollViewer>-->
+            </ScrollViewer>
 
             <Button Style="{StaticResource ButtonStyle}" Command="{Binding OpenFileDialogCommand}" Content="Open" />
             <Button Style="{StaticResource ButtonStyle}" Command="{Binding SaveFileDialogCommand}" Content="Save" />
@@ -58,6 +56,7 @@
             <Button Style="{StaticResource ButtonStyle}" Command="{Binding ResetCommand}" Content="Reset" />
         </StackPanel>
         <StackPanel Grid.Column="1">
+            <DataGrid Height="210"/>
 
         </StackPanel>
     </Grid>

@@ -5,6 +5,7 @@ using CommonServiceLocator;
 using TuringMachine.IDE.Services;
 using TuringMachine.IDE.ViewModels;
 using TuringMachine.IDE.WPF.Services;
+using TuringMachine.Format;
 
 namespace TuringMachine.IDE.WPF
 {
@@ -17,10 +18,10 @@ namespace TuringMachine.IDE.WPF
         {
             var builder = new ContainerBuilder();
 
-            //builder
-            //    .RegisterType<TuringCommandsParser>()
-            //    .AsImplementedInterfaces()
-            //    .SingleInstance();
+            builder
+                .RegisterType<TuringFormat>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
             builder
                 .RegisterType<OpenFileDialogService>()
                 .AsImplementedInterfaces()
