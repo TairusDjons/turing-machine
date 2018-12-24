@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:turing="clr-namespace:TuringMachine;assembly=TuringMachine"
         mc:Ignorable="d"
         Title="Turing Machine IDE"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
@@ -23,6 +24,9 @@
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="Height" Value="32"/>
         </Style>
+        <Style TargetType="DataGrid" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="AutoGenerateColumns" Value="False" />
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -30,32 +34,21 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <StackPanel Margin="0,28,0,0">
-            <TextBlock>Initial State Name:</TextBlock>
-            <TextBox Text="{Binding InitialStateName}" />
-            <TextBlock>Initial Memory:</TextBlock>
-            <TextBox Text="{Binding InitialMemory}" />
+            <TextBlock>Initial State Number:</TextBlock>
+            <TextBox Text="{Binding InitialStateNumber}" />
             <TextBlock>Initial Memory Index:</TextBlock>
             <TextBox Text="{Binding InitialMemoryIndex}" />
+            <TextBlock>Initial Memory:</TextBlock>
+            <TextBox Text="{Binding InitialMemory}" />
+            <TextBlock>Initial Memory Offset:</TextBlock>
+            <TextBox Text="{Binding InitialMemoryOffset}" />
+            <TextBlock>Empty Symbol:</TextBlock>
+            <TextBox Text="{Binding EmptySymbol}" />
             <TextBlock>State Number:</TextBlock>
             <TextBox Text="{Binding TuringMachine.StateNumber}" />
             <TextBlock>Memory Index:</TextBlock>
             <TextBox Text="{Binding TuringMachine.MemoryIndex}" />
             <TextBlock>Memory:</TextBlock>
-            <!--<ScrollViewer Style="{StaticResource BaseStyle}" Margin="72,4,72,4">
-                <ListBox ItemsSource="{Binding TuringMachine.Memory}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <TextBox Text="{Binding ., Converter={StaticResource OptionalCharToStringConverter}}" MaxLength="1"></TextBox>
-                        </ItemContainerTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>-->
-
             <Button Command="{Binding OpenFileDialogCommand}" Content="Open" />
             <Button Command="{Binding SaveFileDialogCommand}" Content="Save" />
             <Button Command="{Binding ExecuteCommand}" Content="Execute" />
@@ -63,7 +56,23 @@
             <Button Command="{Binding ResetCommand}" Content="Reset" />
         </StackPanel>
         <StackPanel Grid.Column="1">
-
+            <DataGrid ItemsSource="{Binding TuringMachine.Commands}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding State.Number}" Header="From State"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding State.Symbol}" Header="Old Symbol"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Action.NextNumber}" Header="To State"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Action.NewSymbol}" Header="New Symbol"></DataGridTextColumn>
+                    <DataGridComboBoxColumn SelectedValueBinding="{Binding Action.Direction}" Header="Memory Direction">
+                        <DataGridComboBoxColumn.ItemsSource>
+                            <x:Array Type="turing:Direction">
+                                <turing:Direction>Right</turing:Direction>
+                                <turing:Direction>Pause</turing:Direction>
+                                <turing:Direction>Left</turing:Direction>
+                            </x:Array>
+                        </DataGridComboBoxColumn.ItemsSource> 
+                    </DataGridComboBoxColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Window>

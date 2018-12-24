@@ -83,8 +83,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\AlphabetToStringConverter.cs" />
-    <Compile Include="Converters\OptionalCharToStringConverter.cs" />
     <Compile Include="Services\ErrorDialogService.cs" />
     <Compile Include="Services\OpenFileDialogService.cs" />
     <Compile Include="Services\SaveFileDialogService.cs" />
@@ -141,6 +139,9 @@
       <Project>{f039dc21-8619-46d3-ab14-331fbfd8e86f}</Project>
       <Name>TuringMachine</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

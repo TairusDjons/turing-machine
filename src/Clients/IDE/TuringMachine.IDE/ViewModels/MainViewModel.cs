@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using TuringMachine.IDE.Services;
@@ -8,7 +7,6 @@ namespace TuringMachine.IDE.ViewModels
 {
     public sealed class MainViewModel : ViewModelBase
     {
-        private readonly ITuringCommandsParser turingCommandsParser;
         private readonly IOpenFileDialogService openFileDialogService;
         private readonly ISaveFileDialogService saveFileDialogService;
         private readonly IErrorDialogService errorDialogService;
@@ -21,12 +19,20 @@ namespace TuringMachine.IDE.ViewModels
             set => Set(ref initialMemoryIndex, value);
         }
 
-        private Memory initialMemory = new Memory();
+        private string initialMemory = "0000";
 
-        public Memory InitialMemory
+        public string InitialMemory
         {
             get => initialMemory;
             set => Set(ref initialMemory, value);
+        }
+
+        private int initialMemoryOffset;
+
+        public int InitialMemoryOffset
+        {
+            get => initialMemoryOffset;
+            set => Set(ref initialMemoryOffset, value);
         }
 
         private int initialStateNumber;
@@ -35,6 +41,14 @@ namespace TuringMachine.IDE.ViewModels
         {
             get => initialStateNumber;
             set => Set(ref initialStateNumber, value);
+        }
+
+        private char emptySymbol = '#';
+
+        public char EmptySymbol
+        {
+            get => emptySymbol;
+            set => Set(ref emptySymbol, value);
         }
 
         private Machine turingMachine;
@@ -56,7 +70,7 @@ namespace TuringMachine.IDE.ViewModels
         public RelayCommand ResetCommand => resetCommand
             ?? (resetCommand = new RelayCommand(() =>
             {
-                TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, InitialMemory);
+                TuringMachine.Reset(InitialStateNumber, InitialMemoryIndex, GetInitialMemory());
                 RaisePropertyChanged(nameof(TuringMachine));
             }, () => !(TuringMachine is null)));
 
@@ -88,7 +102,7 @@ namespace TuringMachine.IDE.ViewModels
                     {
                         try
                         {
-                            TuringMachine.Commands = new Commands(turingCommandsParser.Parse(filepath, Encoding.UTF8));
+                            // TuringMachine.Commands = new Commands(turingCommandsParser.Parse(filepath, Encoding.UTF8));
                         }
                         catch
                         {
@@ -118,17 +132,28 @@ namespace TuringMachine.IDE.ViewModels
                 }));
 
         public MainViewModel(
-                ITuringCommandsParser turingCommandsParser,
                 IOpenFileDialogService openFileDialogService,
                 ISaveFileDialogService saveFileDialogService,
                 IErrorDialogService errorDialogService
             )
         {
-            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, InitialMemory);
-            this.turingCommandsParser = turingCommandsParser ?? throw new ArgumentNullException(nameof(turingCommandsParser));
+            TuringMachine = new Machine(InitialStateNumber, InitialMemoryIndex, GetInitialMemory())
+            {
+                Commands = new Commands()
+                {
+                    new Command(0, '0', 1, '1', Direction.Right),
+                    new Command(1, '0', 0, '2', Direction.Right),
+                }
+            };
+            RaisePropertyChanged(nameof(TuringMachine));
             this.openFileDialogService = openFileDialogService ?? throw new ArgumentNullException(nameof(openFileDialogService));
             this.saveFileDialogService = saveFileDialogService ?? throw new ArgumentNullException(nameof(saveFileDialogService));
             this.errorDialogService = errorDialogService ?? throw new ArgumentNullException(nameof(errorDialogService));
         }
+
+        private Memory GetInitialMemory() => new Memory(initialMemory, initialMemoryOffset)
+        {
+            EmptySymbol = EmptySymbol
+        };
     }
 }
