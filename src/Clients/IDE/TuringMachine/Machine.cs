@@ -35,17 +35,15 @@ namespace TuringMachine
 
         public bool Step()
         {
-            if (Commands.TryGetAction(new CommandState() { Number = StateNumber, Symbol = Memory[MemoryIndex] }, out var action))
-            {
-                StateNumber = action.NextStateNumber;
-                Memory[MemoryIndex] = action.NewSymbol;
-                MemoryIndex += (int)action.Direction;
-                return true;
-            }
-            else
+            var action = Commands.GetAction(new CommandState() { Number = StateNumber, Symbol = Memory[MemoryIndex] });
+            if (action is null)
             {
                 return false;
             }
+            StateNumber = action.NextStateNumber;
+            Memory[MemoryIndex] = action.NewSymbol;
+            MemoryIndex += (int)action.Direction;
+            return true;
         }
 
         public void Execute()
