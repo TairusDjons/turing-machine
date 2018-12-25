@@ -8,6 +8,8 @@ namespace TuringMachine
 
         public Command()
         {
+            State = new CommandState();
+            Action = new CommandAction();
         }
 
         public Command(int stateNumber, char stateSymbol, int nextNumber, char newSymbol, Direction direction)

@@ -136,7 +136,7 @@ namespace TuringMachine.IDE.ViewModels
         public RelayCommand SaveFileDialogCommand => saveFileDialogCommand
                 ?? (saveFileDialogCommand = new RelayCommand(() =>
                 {
-                    var name = openFileDialogService.Open();
+                    var name = saveFileDialogService.Open();
                     if (!(name is null))
                     {
                         // TODO: write emitter

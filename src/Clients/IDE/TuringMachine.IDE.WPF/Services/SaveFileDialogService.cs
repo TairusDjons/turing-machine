@@ -6,7 +6,7 @@ namespace TuringMachine.IDE.WPF.Services
 {
     public class SaveFileDialogService : ISaveFileDialogService
     {
-        public void Open(string contents)
+        public string Open()
         {
             var dialog = new SaveFileDialog
             {
@@ -16,10 +16,9 @@ namespace TuringMachine.IDE.WPF.Services
 
             if (dialog.ShowDialog() != true)
             {
-                return;
+                return null;
             }
-
-            File.WriteAllText(dialog.FileName, contents);
+            return dialog.FileName;
         }
     }
 }
