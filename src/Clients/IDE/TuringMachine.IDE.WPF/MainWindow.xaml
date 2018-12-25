@@ -55,10 +55,11 @@
             <TextBlock>Memory:</TextBlock>
             <ScrollViewer Name="sv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Style="{StaticResource BaseStyle}" Margin="72,4,72,4" Height="63">
                 <ListView Name="lv" ItemsSource="{Binding CurrentMemory}" Height="40"
-                         SelectedIndex="{Binding TuringMachine.MemoryIndex}">
+                         SelectedIndex = "{Binding TuringMachine.MemoryIndex}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" ></StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                            </StackPanel>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

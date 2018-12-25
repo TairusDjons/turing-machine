@@ -33,27 +33,16 @@ namespace TuringMachine.IDE.WPF
         }
         private void inf_scroll(object sender, ScrollChangedEventArgs e)
         {
+            
             var some = new List<char>();
             if (lv.ItemsSource is List<char>)
                 some = (List<char>)lv.ItemsSource;
-            if (some.Count != 0)
+            if (sv.HorizontalOffset == sv.ScrollableWidth)
             {
-                foreach (char c in some)
-                {
-                    chars.Add(c);
-                    
-                }
-                lv.ItemsSource = chars;
-            }
-            if (e.HorizontalChange > e.HorizontalOffset)
-            {
-                chars.Add('#');
                 some.Add('#');
             }
-            for (int i = 0; i > e.HorizontalChange; i--)
+            if (e.HorizontalOffset == 0)
             {
-                object tmp = lv.Items[lv.Items.Count - 1];
-                chars.Insert(0, '#');
                 some.Insert(0, '#');
             }
             sv.ScrollChanged -= inf_scroll;        // remove the handler temporarily
@@ -61,9 +50,12 @@ namespace TuringMachine.IDE.WPF
             Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(() => {
                 sv.ScrollChanged += inf_scroll;    // add the handler back after the scrolling has occurred to avoid recursive scrolling
             }));
+            if (some != null)
+            {
+                ICollectionView view = CollectionViewSource.GetDefaultView(some);
+                view.Refresh();
+            }
 
-            //lv.ItemsSource = some;
-            
         }
     }
 }
