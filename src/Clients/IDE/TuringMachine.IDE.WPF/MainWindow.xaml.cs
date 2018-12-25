@@ -39,11 +39,11 @@ namespace TuringMachine.IDE.WPF
                 some = (List<char>)lv.ItemsSource;
             if (sv.HorizontalOffset == sv.ScrollableWidth)
             {
-                some.Add('#');
+                some.Add(char.Parse(Emp.Text));
             }
-            if (e.HorizontalOffset == 0)
+            if (e.HorizontalOffset - e.HorizontalChange <= 0)
             {
-                some.Insert(0, '#');
+                some.Insert(0, char.Parse(Emp.Text));
             }
             sv.ScrollChanged -= inf_scroll;        // remove the handler temporarily
             sv.ScrollToVerticalOffset(sv.VerticalOffset - e.VerticalChange);

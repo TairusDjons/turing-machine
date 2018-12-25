@@ -47,18 +47,18 @@
             <TextBlock>Initial Memory Offset:</TextBlock>
             <TextBox Text="{Binding InitialMemoryOffset}" />
             <TextBlock>Empty Symbol:</TextBlock>
-            <TextBox Text="{Binding EmptySymbol}" />
+            <TextBox Name="Emp" Text="{Binding EmptySymbol}" />
             <TextBlock>State Number:</TextBlock>
             <TextBox Text="{Binding TuringMachine.StateNumber}" />
             <TextBlock>Memory Index:</TextBlock>
             <TextBox Text="{Binding TuringMachine.MemoryIndex}" />
             <TextBlock>Memory:</TextBlock>
-            <ScrollViewer Name="sv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Style="{StaticResource BaseStyle}" Margin="72,4,72,4" Height="63">
+            <ScrollViewer Name="sv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Style="{StaticResource BaseStyle}" Margin="10,4" Height="72">
                 <ListView Name="lv" ItemsSource="{Binding CurrentMemory}" Height="40"
                          SelectedIndex = "{Binding TuringMachine.MemoryIndex}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="Auto">
                             </StackPanel>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
